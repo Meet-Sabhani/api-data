@@ -1,20 +1,37 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DataStyle } from "../style/DataStyle";
 import { Wrapper } from "../style/wrapper";
+import { Link, useParams } from "react-router-dom";
+import { PaginationStyle } from "../style/Pagination";
 
 export const Pagination = () => {
   const [result, setResult] = useState([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const nameRef = useRef();
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchData = async (searchPage = 1) => {
+  const { pageNumber } = useParams();
+
+  useEffect(() => {
+    fetchData();
+  }, [page]); // Fetch data when page changes
+
+  const fetchData = async () => {
     try {
-      const url = `https://api.unsplash.com/search/photos?page=${searchPage}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=10`;
+      setLoading(true);
+
+      const url = `https://api.unsplash.com/search/photos?page=${page}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=15`;
       const response = await fetch(url);
-      const { results } = await response.json();
-      setResult((prevResults) => [...prevResults, ...results]);
+      const { results, total_pages } = await response.json();
+
+      setTotalPages(total_pages);
+
+      // If it's the first page, set the results directly, otherwise append to existing results
+      setResult((prevResults) =>
+        page === 1 ? results : [...prevResults, ...results]
+      );
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -29,13 +46,13 @@ export const Pagination = () => {
   };
 
   const handleSearchAndFetch = () => {
+    setPage(1);
     fetchData();
   };
 
-  const handlePageClick = (pageNumber) => {
+  const handlePageClick = () => {
     setPage(pageNumber);
     setResult([]);
-    fetchData(pageNumber);
   };
 
   return (
@@ -47,33 +64,30 @@ export const Pagination = () => {
           value={query}
           onChange={handleInputChange}
           placeholder="Search for..."
-          ref={nameRef}
         />
         <button onClick={handleSearchAndFetch}>Search</button>
       </div>
-      <div className="pagination">
-        {[...Array(10)].map((_, index) => (
-          <span key={index + 1} onClick={() => handlePageClick(index + 1)}>
-            {index + 1}
-          </span>
-        ))}
-      </div>
+      {totalPages > 1 && (
+        <PaginationStyle>
+          {[...Array(totalPages)].map((_, index) => (
+            <Link
+              to={`/pagination/${index + 1}`}
+              key={index + 1}
+              onClick={() => handlePageClick(index + 1)}
+            >
+              {index + 1}
+            </Link>
+          ))}
+        </PaginationStyle>
+      )}
       <DataStyle>
-        {result.map(({ id, likes, urls }) => (
-          <div key={id}>
-            <div>{likes}</div>
-            <img src={urls.small} alt="" />
+        {result.map((e) => (
+          <div key={e.id}>
+            <img src={e.urls.small} alt="" />
           </div>
         ))}
         {loading && <div>Loading...</div>}
       </DataStyle>
-      <div className="pagination">
-        {[...Array(10)].map((_, index) => (
-          <span key={index + 1} onClick={() => handlePageClick(index + 1)}>
-            {index + 1}
-          </span>
-        ))}
-      </div>
     </Wrapper>
   );
 };

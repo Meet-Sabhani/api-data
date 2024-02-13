@@ -8,9 +8,9 @@ export const Data = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async (searchPage = 1) => {
+  const fetchData = async () => {
     try {
-      const url = `https://api.unsplash.com/search/photos?page=${searchPage}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=10`;
+      const url = `https://api.unsplash.com/search/photos?page=${page}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=10`;
       const response = await fetch(url);
       const { results } = await response.json();
       setResult((prevResults) => [...prevResults, ...results]);

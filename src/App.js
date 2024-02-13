@@ -2,13 +2,22 @@ import React from "react";
 import { GlobalStyle } from "./style/GobalStyle";
 import { Data } from "./components/Data";
 import { Pagination } from "./components/Pagination";
+import "react-toastify/dist/ReactToastify.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Navbar } from "./components/Navbar";
 
 export const App = () => {
   return (
     <>
       <GlobalStyle />
-      {/* <Data /> */}
-      <Pagination />
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Data />} />
+          <Route path="/pagination" element={<Pagination />} />
+          <Route path="/pagination/:pageNumber" element={<Pagination />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 };
