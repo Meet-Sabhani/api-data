@@ -7,14 +7,13 @@ export const Data = () => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const nameRef = useRef();
+  // const nameRef = useRef();
 
-  const fetchData = async (query, pageNumber) => {
+  const fetchData = async (searchPage = 1) => {
     try {
-      const url = `https://api.unsplash.com/search/photos?page=${pageNumber}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=12`;
+      const url = `https://api.unsplash.com/search/photos?page=${searchPage}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=10`;
       const response = await fetch(url);
-      const data = await response.json();
-      const results = data.results;
+      const { results } = await response.json();
       setResult((prevResults) => [...prevResults, ...results]);
       setLoading(false);
     } catch (error) {
@@ -23,49 +22,53 @@ export const Data = () => {
     }
   };
 
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
+    setPage(1);
+    setResult([]);
+  };
 
-    if (scrollTop + clientHeight >= scrollHeight - 10 && !loading) {
-      setLoading(true);
-      setPage((prevPage) => prevPage + 1);
-    }
+  const handleSearchAndFetch = () => {
+    fetchData();
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } =
+        document.documentElement;
+
+      if (scrollTop + clientHeight >= scrollHeight - 10 && !loading) {
+        setLoading(true);
+        setPage((prevPage) => prevPage + 1);
+        fetchData(page + 1);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
-
-  useEffect(() => {
-    fetchData(query, page);
-  }, [query, page]);
-
-  const handleInputChange = (e) => {
-    setQuery(e.target.value);
-  };
+  }, [loading, page, query]);
 
   return (
     <Wrapper>
       <div className="top">
-        {" "}
-        <h1>search anything</h1>
+        <h1>Search anything</h1>
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder="Search for..."
-          ref={nameRef}
+          // ref={nameRef}
         />
+        <button onClick={handleSearchAndFetch}>Search</button>
       </div>
       <DataStyle>
-        {result.map((e) => (
-          <div key={e.id}>
-            <div>{e.likes}</div>
-            <img src={e.urls.small} alt="" />
+        {result.map(({ id, likes, urls }) => (
+          <div key={id}>
+            <div>{likes}</div>
+            <img src={urls.small} alt="" />
           </div>
         ))}
         {loading && <div>Loading...</div>}
