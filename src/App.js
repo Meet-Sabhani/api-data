@@ -16,8 +16,8 @@ export const App = () => {
         <Routes>
           <Route path="/" element={<Data />} />
           <Route path="/pagination" element={<Pagination />} />
-          <Route path="/antPagination" element={<AntPagination />} />
           <Route path="/pagination/:pageNumber" element={<Pagination />} />
+          {/* <Route path="/antPagination" element={<AntPagination />} /> */}
         </Routes>
       </BrowserRouter>
     </>
