@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { DataStyle } from "../style/DataStyle";
-import { Wrapper } from "../style/wrapper";
 import { Link, useParams } from "react-router-dom";
-import { PaginationStyle } from "../style/Pagination";
+import { Pagination } from "antd";
+import { Wrapper } from "../style/wrapper";
+import { DataStyle } from "../style/DataStyle";
+import { AntdStyle } from "../style/AntdStyle";
 
-export const Pagination = () => {
+const AntPagination = () => {
   const [result, setResult] = useState([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -15,7 +16,7 @@ export const Pagination = () => {
 
   useEffect(() => {
     fetchData();
-  }, [page]); 
+  }, [page]);
 
   const fetchData = async () => {
     try {
@@ -34,7 +35,7 @@ export const Pagination = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-      
+
       setLoading(false);
     }
   };
@@ -56,40 +57,43 @@ export const Pagination = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="top">
-        <h1>Pagination</h1>
-        <h1>Search anything</h1>
+    <>
+      <Wrapper>
+        <div className="top">
+          <h1>antd Pagination</h1>
+          <h1>Search anything</h1>
 
-        <input
-          type="text"
-          value={query}
-          onChange={handleInputChange}
-          placeholder="Search for..."
-        />
-        <button onClick={handleSearchAndFetch}>Search</button>
-      </div>
-      {totalPages > 1 && (
-        <PaginationStyle>
-          {[...Array(totalPages)].map((_, index) => (
-            <Link
-              to={`/pagination/${index + 1}`}
-              key={index + 1}
-              onClick={() => handlePageClick(index + 1)}
-            >
-              {index + 1}
-            </Link>
+          <input
+            type="text"
+            value={query}
+            onChange={handleInputChange}
+            placeholder="Search for..."
+          />
+          <button onClick={handleSearchAndFetch}>Search</button>
+        </div>
+        {totalPages > 1 && (
+          <AntdStyle>
+            <Pagination
+              defaultCurrent={1}
+              total={totalPages}
+              onChange={(pageNumber) => {
+                setPage(pageNumber);
+                setResult([]);
+              }}
+            />
+          </AntdStyle>
+        )}
+        <DataStyle>
+          {result.map((e) => (
+            <div key={e.id}>
+              <img src={e.urls.small} alt="" />
+            </div>
           ))}
-        </PaginationStyle>
-      )}
-      <DataStyle>
-        {result.map((e) => (
-          <div key={e.id}>
-            <img src={e.urls.small} alt="" />
-          </div>
-        ))}
-        {loading && <div>Loading...</div>}
-      </DataStyle>
-    </Wrapper>
+          {loading && <div>Loading...</div>}
+        </DataStyle>
+      </Wrapper>
+    </>
   );
 };
+
+export default AntPagination;

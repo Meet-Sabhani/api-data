@@ -7,6 +7,7 @@ export const Navbar = () => {
     <NavbarStyle>
       <Link to={"/"}>infinight scroll</Link>
       <Link to={"/pagination"}>pagination</Link>
+      <Link to={"/antPagination"}>Ant pagination</Link>
     </NavbarStyle>
   );
 };
