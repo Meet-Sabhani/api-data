@@ -15,5 +15,11 @@ export const Wrapper = styled.div`
       padding: 5px;
       outline: none;
     }
+    button {
+      border: none;
+      outline: none;
+      color: #000;
+      background-color: #eee;
+    }
   }
 `;
