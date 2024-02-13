@@ -53,6 +53,7 @@ export const Data = () => {
   return (
     <Wrapper>
       <div className="top">
+        <h1>inflight Scroll</h1>
         <h1>Search anything</h1>
         <input
           type="text"

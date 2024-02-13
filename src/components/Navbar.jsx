@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { NavbarStyle } from "../style/NavbarStyle";
 
 export const Navbar = () => {
   return (
-    <div>
+    <NavbarStyle>
       <Link to={"/"}>infinight scroll</Link>
       <Link to={"/pagination"}>pagination</Link>
-    </div>
+    </NavbarStyle>
   );
 };
