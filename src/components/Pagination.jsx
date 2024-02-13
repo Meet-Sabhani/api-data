@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { DataStyle } from "../style/DataStyle";
 import { Wrapper } from "../style/wrapper";
 
-export const Data = () => {
+export const Pagination = () => {
   const [result, setResult] = useState([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const nameRef = useRef();
 
   const fetchData = async (searchPage = 1) => {
     try {
@@ -31,24 +32,11 @@ export const Data = () => {
     fetchData();
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
-
-      if (scrollTop + clientHeight >= scrollHeight - 10 && !loading) {
-        setLoading(true);
-        setPage((prevPage) => prevPage + 1);
-        fetchData(page + 1);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [loading, page, query]);
+  const handlePageClick = (pageNumber) => {
+    setPage(pageNumber);
+    setResult([]);
+    fetchData(pageNumber);
+  };
 
   return (
     <Wrapper>
@@ -59,8 +47,16 @@ export const Data = () => {
           value={query}
           onChange={handleInputChange}
           placeholder="Search for..."
+          ref={nameRef}
         />
         <button onClick={handleSearchAndFetch}>Search</button>
+      </div>
+      <div className="pagination">
+        {[...Array(10)].map((_, index) => (
+          <span key={index + 1} onClick={() => handlePageClick(index + 1)}>
+            {index + 1}
+          </span>
+        ))}
       </div>
       <DataStyle>
         {result.map(({ id, likes, urls }) => (
@@ -71,6 +67,13 @@ export const Data = () => {
         ))}
         {loading && <div>Loading...</div>}
       </DataStyle>
+      <div className="pagination">
+        {[...Array(10)].map((_, index) => (
+          <span key={index + 1} onClick={() => handlePageClick(index + 1)}>
+            {index + 1}
+          </span>
+        ))}
+      </div>
     </Wrapper>
   );
 };
