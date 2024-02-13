@@ -57,8 +57,8 @@ export const Pagination = () => {
 
   return (
     <Wrapper>
-        <h1>Pagination</h1>
       <div className="top">
+        <h1>Pagination</h1>
         <h1>Search anything</h1>
         <input
           type="text"
