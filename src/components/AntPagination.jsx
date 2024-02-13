@@ -22,7 +22,7 @@ const AntPagination = () => {
     try {
       setLoading(true);
 
-      const url = `https://api.unsplash.com/search/photos?page=${page}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=15`;
+      const url = `https://api.unsplash.com/search/photos?page=${page}&query=${query}&client_id=uuQkkq4bui9YIraeKN6lcbjW8zdrd-aj9kTfon-7Jt8&per_page=9`;
       const response = await fetch(url);
       const { results, total_pages } = await response.json();
 

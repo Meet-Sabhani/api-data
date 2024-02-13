@@ -19,7 +19,9 @@ export const Wrapper = styled.div`
       border: none;
       outline: none;
       color: #000;
-      background-color: #eee;
+      background-color: #dadada;
+      padding: 10px;
+      border-radius: 10px;
     }
   }
 `;
